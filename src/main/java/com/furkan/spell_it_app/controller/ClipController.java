@@ -1,10 +1,11 @@
 package com.furkan.spell_it_app.controller;
 
 import com.furkan.spell_it_app.model.Clip;
-import com.furkan.spell_it_app.repositories.ClipRepository;
 import com.furkan.spell_it_app.service.ClipService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,24 +17,25 @@ public class ClipController {
     @Autowired
     private ClipService clipService;
 
+
     @PostMapping
-    public Clip addClip(@RequestBody @Valid Clip clip){
-        return clipService.addClip(clip);
+    public ResponseEntity<Clip> addClip(@RequestBody @Valid Clip clip){
+        return new ResponseEntity<>(clipService.addClip(clip), HttpStatus.CREATED);
     }
 
-    @GetMapping("/test")
-    public String test(){
-        return "hllo";
+    @GetMapping("/all")
+    public ResponseEntity<List<Clip>> getAllClips(){
+        return new ResponseEntity<>(clipService.getAllClips(), HttpStatus.OK);
     }
 
     @GetMapping
-    public List<Clip> getAllClips(){
-        return clipService.getAllClips();
+    public ResponseEntity<List<Clip>> getTenUnseenClips(){
+        return new ResponseEntity<>(clipService.getTenUnseenClips(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public Clip getClip(@PathVariable("id") Long clipId){
-        return clipService.getClip(clipId);
+    public ResponseEntity<Clip> getClip(@PathVariable("id") Long clipId){
+        return new ResponseEntity<>(clipService.getClip(clipId), HttpStatus.OK);
     }
 
 

@@ -1,5 +1,6 @@
 package com.furkan.spell_it_app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jdk.jfr.Timestamp;
@@ -24,6 +25,7 @@ public class Clip {
     private String path;
 
     @ManyToMany(mappedBy = "seenClips")
+    @JsonBackReference
     private List<User> watchedBy;
 
     public Long getId() {

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -34,14 +35,14 @@ public class SecurityFilter {
                 .authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
                     authConfig.requestMatchers(HttpMethod.POST, "/auth/register").permitAll();
-                    authConfig.requestMatchers(HttpMethod.GET, "/auth/{id}").permitAll();
                     authConfig.requestMatchers("/error").permitAll();
+                    authConfig.requestMatchers(HttpMethod.GET, "/auth/{id}").hasRole("ADMIN");
+                    authConfig.requestMatchers(HttpMethod.GET, "/user/**").hasAuthority(Permission.WATCH_CLIP.name());
+                    authConfig.requestMatchers(HttpMethod.POST,"/user/**").hasRole(Permission.WATCH_CLIP.name());
                     authConfig.requestMatchers(HttpMethod.GET, "/clips/**").hasAuthority(Permission.WATCH_CLIP.name());
                     authConfig.requestMatchers(HttpMethod.DELETE, "/clips/**").hasAuthority(Permission.REMOVE_CLIP.name());
-                    authConfig.requestMatchers(HttpMethod.POST, "/clips").hasAuthority(Permission.ADD_CLIP.name());
-
+                    authConfig.requestMatchers(HttpMethod.POST, "/clips/**").hasAuthority(Permission.ADD_CLIP.name());
                     authConfig.anyRequest().denyAll();
-
                 });
 
         return httpSecurity.build();
